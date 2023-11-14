@@ -14,7 +14,7 @@ The purpose of this project is to demonstrate the ability to effectively communi
 Are you like me going the Taylor Swift concert in London next June and looking for the best place to stay ?
 London is an expensive city to visit with so much to offer. How to find accommodation with the best value for money, yet avoid wasting time and money on transport?
 
-<img src="images/summary.png" alt="drawing" width="950"/>
+<img src="project1_blog/images/summary.png" alt="drawing" width="950"/>
 
 ### Table of Contents
 
