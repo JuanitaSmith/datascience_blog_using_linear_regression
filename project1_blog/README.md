@@ -18,13 +18,14 @@ London is an expensive city to visit with so much to offer. How to find accommod
 
 ### Table of Contents
 
-1. [Project requirements](#requirements)
+1. [Udacity Project requirements](#requirements)
 2. [Installation](#installation)
 3. [Project Motivation](#motivation)
 4. [File Descriptions](#files)
 5. [Data transformation](#transform)
 6. [Results](#results)
 7. [Licensing, Authors, and Acknowledgements](#licensing)
+
 
 ## 1. Udacity Project Requirements <a name="requirements"></a>
 
@@ -41,9 +42,9 @@ Overview of the main steps of this project, following the CRISP-DM process:
 
 To clone the repository: https://github.com/JuanitaSmith/datascience_nanodegree.git
 
-Environment was build using Anaconda.
-Python 3 (Python 3.10 interpreter was used).
-Refer to `requirements.txt` for libraries needed to build your environment.
+- Environment was build using Anaconda.
+- Python 3 (Python 3.10 interpreter was used).
+- Refer to `requirements.txt` for libraries and versions needed to build your environment.
 
 
 ## 3. Project Motivation<a name="motivation"></a>
@@ -56,18 +57,18 @@ Before we jump into modelling, I first wanted to understand the main drivers tha
 
 This project will focus on answering questions below.  
 
-1) Are some hosts running a business, and if so, what is the impact on price ?
-- Should we distinguish between short-term and long-term rentals, and how does it effect the daily average price ?
-- Are some hosts running a business with multiple listings ? If so, how does this affect the price ?
+<span style="color:blue; font-size:20px; line-height:20px; font-family: Calibri;">1) Are some hosts running a business, and if so, what is the impact on price ?</span>
+>- Should we distinguish between short-term and long-term rentals, and how does it effect the daily average price ?
+>- Are some hosts running a business with multiple listings ? If so, how does this affect the price ?
 
-2) Host Analysis: How does **host excellence** influence price ?
-- Super hosts seems to describe their properties better, how does this effect price and availability ?
+<span style="color:blue; font-size:20px; line-height:20px; font-family: Calibri;">2) Host Analysis: How does **host excellence** influence price ?</span>
+>- Super hosts seems to describe their properties better, how does this effect price and availability ?
 
-3) What effect does **star ratings** have on property price ?
-- Would a 5-star vs 3-star listing in the same location cost more ?
+<span style="color:blue; font-size:20px; line-height:20px; font-family: Calibri;">3) What effect does **star ratings** have on property price ?</span>
+>- Would a 5-star vs 3-star listing in the same location cost more ?
 
-4) Predict average daily listing price
-- Knowing the impact of host excellence and star ratings above, could we make an accurate average daily price prediction ?
+<span style="color:blue; font-size:20px; line-height:20px; font-family: Calibri;">4) Predict average daily listing price</span>
+>- Knowing the impact of business listings, host excellence and star ratings above, could we make an accurate average daily price prediction ?
 
 #### The project is divided into 5 notebooks:
 
@@ -87,29 +88,29 @@ To download this exact version click on 'show archived data'
 
 The following datasets were downloaded:
 
-- listings: full descriptions of each rental property with average review score and daily price
-- calendar: each listing have a record for each calendar day for the next 365 days ahead, showing the price and availability on that specific day
+- **listings**: full descriptions of each rental property with average review score and daily price
+- **calendar**: each listing have a record for each calendar day for the next 365 days ahead, showing the price and availability on that specific day
 - neighbourhoods.geojson: Used to visualize spatial data in notebook 5
 
 Metadata are available [here](https://docs.google.com/spreadsheets/d/1iWCNJcSutYqpULSQHlNyGInUvHg2BoUGoNRIGa6Szc4/edit#gid=1322284596)
 
 ### **Important:** 
-These raw files are not published to github, as file size exceed 100MB. 
-To rerun this project, simply download the files and add them to a `data` directory and update the file paths.
+These raw files are not published to github, as file size exceed 100MB and result in errors.
+To rerun this project, simply download the files and add them to a `data/raw/` directory and update the file paths in the notebooks.
 
 
 ## 5. Data transformation <a name="transform"></a>
 
-In notebook 1 during data wrangling, raw listing data is cleaned, outliers removed, obsolete listings are removed, etc.
+1) In notebook 1 during data wrangling, raw listing data is cleaned, outliers removed, obsolete listings are removed, etc.
 The cleaned file is stored in `data/clean/listing_clean.pkl` to reserve datatypes.
 
-In notebook 2, whilst answering question if some listings are run by businesses, a new boolean feature was introduced 'is_business'.
+2) In notebook 2, whilst answering question if some listings are run by businesses, a new boolean feature was introduced 'is_business'.
 Further outliers in average price was detected and removed.
 Enriched listing dataset was stored in `data/clean/listing_enhanced.pkl`, and is used in remaining notebooks to answer questions 2-4.
 
 ## 6. Results<a name="results"></a>
 
-The main findings of the code can be found at the post available [here](https://medium.com/@josh_2774/how-do-you-become-a-developer-5ef1c1c68711).
+The main findings of the code can be found at the post available [here]().
 
 ## 7. Licensing, Authors, Acknowledgements<a name="licensing"></a>
 
