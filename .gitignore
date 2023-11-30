@@ -10,4 +10,13 @@ project1_blog/data/raw/listings/london/*
 project1_blog/data/raw/listings_summary/london/*
 project1_blog/data/raw/reviews/london/*
 project1_blog/data/raw/reviews_summary/london/*
-
+project1_blog/notebooks/4_Price_Prediction.ipynb
+project1_blog/notebooks/pipe examples with transformers.ipynb
+project1_blog/notebooks/plot_linear_model_coefficient_interpretation.ipynb
+project1_blog/notebooks/plot_linear_model_coefficient_interpretation 2.ipynb
+project1_blog/notebooks/plot_linear_model_coefficient_interpretation_airbnb.ipynb
+project1_blog/notebooks/plot_underfitting_overfitting.ipynb
+project1_blog/notebooks/Testing Linear Regression Assumptions in Python.ipynb
+project1_blog/notebooks/Untitled.ipynb
+/project1_blog/notebooks/columntranform distort shape.ipynb
+/project1_blog/data/models/
