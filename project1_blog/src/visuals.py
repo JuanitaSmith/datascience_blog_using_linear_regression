@@ -4,28 +4,39 @@ import numpy as np
 import pandas as pd
 
 
+def hex_to_rgb(hex_value):
+    """ Convert color hex code to rgb for sns mapping """    
+    
+    h = hex_value.lstrip('#')
+    return tuple(int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4))
+
 def set_plot_defaults():
     """Set defaults formatting for consistency across all plots """
 
     # set plot style
     sns.set_style("whitegrid")
 
-    palette = sns.color_palette("viridis_r", 15)
+    # my custom color palette - I call is ocean spray
+    hex_colors = [
+      '7C9E9E', # base
+      'E2E9E9', # light gray    
+      '578686',  # group 1
+      '667595',  # group 2     
+      'FFEDC8', # highlight  
+      '366F6F', # highlight intense     
+      'DFC591', # base_complementary   
+    ]  
+    
+    rgb_colors = list(map(hex_to_rgb, hex_colors))
+    # sns.palplot(rgb_colors)
 
-    base_color = palette[-4]
-
-    # red
-    base_highlight_intense = sns.color_palette("viridis_r", 15)[0]
-    base_highlight = sns.color_palette("viridis_r", 15)[1]
-
-    # yellow
-    base_complementary = palette[0]
-
-    # grey - used for comparison to all flights
-    base_grey = 'lightgrey'
-
-    base_color_arr = palette[-6]
-    base_color_dep = palette[-9]
+    base_color = rgb_colors[0]
+    base_grey = rgb_colors[1]   
+    base_color_group1 = rgb_colors[2]   
+    base_color_group2 = rgb_colors[3]   
+    base_highlight = rgb_colors[4]   
+    base_highlight_intense = rgb_colors[5]     
+    base_complimentary = rgb_colors[6] 
 
     # up and down arrows for growth indicators
     symbols = [u'\u25BC', u'\u25B2']
@@ -42,14 +53,15 @@ def set_plot_defaults():
     plt.rc('legend', fontsize=small_size)  # legend fontsize
     plt.rc('figure', titlesize=bigger_size, titleweight="bold", figsize=[8, 4])  # fontsize of the figure title
 
-    return base_color, base_highlight_intense, base_highlight, base_complementary, base_grey, base_color_arr, base_color_dep, symbols
+    return base_color, base_highlight_intense, base_highlight, base_complimentary, base_grey, base_color_group1, base_color_group2, symbols
 
 
 # set default plot formatting
-BASE_COLOR, BASE_HIGHLIGHT_INTENSE, BASE_HIGHLIGHT, BASE_COMPLEMENTARY, BASE_GREY, BASE_COLOR_ARR, BASE_COLOR_DEP, SYMBOLS = set_plot_defaults()
+BASE_COLOR, BASE_HIGHLIGHT_INTENSE, BASE_HIGHLIGHT, BASE_COMPLIMENTARY, BASE_GREY, BASE_COLOR_ARR, BASE_COLOR_DEP, SYMBOLS = set_plot_defaults()
 
 
-def improve_yticks(maxvalue, bins=10):
+def improve_yticks(maxvalue, 
+                   bins=10):
     """Dynamically set the binsize to control space between annotation and bars"""
 
     binsize = maxvalue / bins
@@ -273,8 +285,15 @@ def flights_by_cat(df, col, title='Origin airports with most delayed flights', t
     plt.show()
 
 
-def plot_categories(df, annotate=True, title='month', rotate=False, topn=20, figsize=(12, 6), orient='v',
-                    base_color=BASE_COLOR, base_grey=BASE_GREY):
+def plot_categories(df, annotate=True, 
+                    title='month', 
+                    rotate=False, 
+                    topn=20, 
+                    figsize=(12, 6), 
+                    orient='v',
+                    base_color=BASE_COLOR, 
+                    base_grey=BASE_GREY):
+    
     ontime_total = df['on_time'].sum()
     delay_total = df['delayed'].sum()
     grand_total = ontime_total + delay_total
@@ -421,8 +440,11 @@ def plot_categories(df, annotate=True, title='month', rotate=False, topn=20, fig
     plt.show()
 
 
-def cat_heatmap(df, reason, center=0):
+def cat_heatmap(df, 
+                reason, 
+                center=0):  
     """ heat map with standard formatting """
+    
     g = sns.heatmap(df, center=center, cmap='Spectral', linewidths=0.003, linecolor='lightgrey', square=True,
                     mask=df < 1, annot=True, fmt=".0f",
                     cbar_kws={"orientation": "vertical", "pad": 0.03, "shrink": 0.5})
@@ -432,7 +454,14 @@ def cat_heatmap(df, reason, center=0):
     plt.xlabel('Origin Airport')
     plt.ylabel('Carrier')
     
-def compare_features(df, cols_of_interest, conda, condb, cata_description, catb_description, title_extension, feature_focus):
+def compare_features(df, 
+                     cols_of_interest, 
+                     conda, 
+                     condb, 
+                     cata_description, 
+                     catb_description, 
+                     title_extension, 
+                     feature_focus):
     
 
     if feature_focus:
@@ -457,8 +486,6 @@ def compare_features(df, cols_of_interest, conda, condb, cata_description, catb_
 
     cat = list(df.category.unique())
 
-#     ax = sns.barplot(data=df, y=df['mean'], x=df.index, hue='category', errorbar='sd', 
-#                     palette={cat[0]: BASE_GREY, cat[1]: BASE_COLOR})
     
     ax = sns.barplot(data=df, y=df['mean'], x=df.index, hue='category', errorbar='sd', 
                      palette={cata_description: BASE_GREY, catb_description: BASE_COLOR},
@@ -480,8 +507,14 @@ def compare_features(df, cols_of_interest, conda, condb, cata_description, catb_
     plt.title('Comparison of features: {}'.format(title_extension))
     plt.show()   
     
-def annotate_grouped_barplot(df_a, df_b, hue='is_business', x='room_type', y='percentage', topn=10, 
-                             figsize=(6,10), title='Business and Individual Hosts: Price Comparision',
+def annotate_grouped_barplot(df_a, 
+                             df_b, 
+                             hue='is_business', 
+                             x='room_type', 
+                             y='percentage', 
+                             topn=10, 
+                             figsize=(6,10), 
+                             title='Business and Individual Hosts: Price Comparision',
                              legend_title='Is Business?'):
 
     plt.figure(figsize=figsize)
@@ -541,8 +574,13 @@ def annotate_grouped_barplot(df_a, df_b, hue='is_business', x='room_type', y='pe
 
     plt.show()
     
-def plot_categories(df, annotate=True, title=None, topn=20, figsize=(18, 10),
-                    base_color=BASE_COLOR, base_grey=BASE_GREY):
+def plot_categories(df, 
+                    annotate=True, 
+                    title=None, 
+                    topn=20, 
+                    figsize=(18, 10),
+                    base_color=BASE_COLOR, 
+                    base_grey=BASE_GREY):
     
     business_total = df['business'].sum()
     individual_total = df['individual'].sum()
@@ -558,7 +596,6 @@ def plot_categories(df, annotate=True, title=None, topn=20, figsize=(18, 10),
                       label='Business', errorbar=None, width=0.3,
                       edgecolor=BASE_COLOR)
     
-#     yticks = ax1.get_xticks()
     xticks = np.arange(0, 1.1, 0.1) 
     xlabels = [f'{tick:.0%}'.format(tick) for tick in xticks]
     plt.xticks(xticks, xlabels)  
@@ -566,11 +603,7 @@ def plot_categories(df, annotate=True, title=None, topn=20, figsize=(18, 10),
     labels = []
     for bars in ax1.containers:   
         label = [x for x in bars.datavalues]
-        labels.append(label)
-        
-#     print(labels)
-#         print(labels)
-#         ax1.bar_label(bars, labels=labels, weight='bold', padding=2, color='black')    
+        labels.append(label) 
     
     label_colors = ['darkorange', 'black']
     for i, bars in enumerate(ax1.containers): 
@@ -582,5 +615,67 @@ def plot_categories(df, annotate=True, title=None, topn=20, figsize=(18, 10),
     plt.title('{}'.format(title))
     plt.xlabel('Proportion of business vs individual rentals')
     plt.legend(bbox_to_anchor=(1, 1), loc='upper left')
+    plt.tight_layout()
+    plt.show()  
+    
+def hist_by_cat(df, 
+                col, 
+                title='Distribution for', 
+                topn=20, 
+                base_color=BASE_COLOR,
+                base_highlight=BASE_COMPLIMENTARY
+               ):
+    """ Categorical seaborn count plot - first 3 highest bars are highlighted """
+
+    # set figsize
+    if df[col].nunique() < 5:
+        figsize=(6,3)
+    else: 
+        figsize=(12,8)    
+    
+    # calculate top category and order of bar charts
+    top = df[col].value_counts(ascending=False)
+    top_order = top.index[:topn]
+    
+    # update topn to max number unique values. If less than 3 unique values, disable highlighting
+    topn = len(top_order) - 1
+
+    if topn > 3:    
+        clrs = [base_color if i >= 3 else base_highlight for i in np.arange(0, topn + 1, 1)]
+    else:
+        clrs = [base_color if i >= 3 else base_color for i in np.arange(0, topn + 1, 1)]
+
+    plt.figure(figsize=figsize)
+    ax = sns.countplot(data=df, 
+                       y=col, 
+                       hue=col, 
+                       hue_order=top_order, 
+                       order=top_order, 
+                       palette=clrs, 
+                       orient='h', 
+                       width=0.5, 
+                       legend=False)
+
+    plt.title('{} {}'.format(title, col), weight='bold')
+    plt.xlabel('Frequency')
+    plt.ylabel(col)
+
+    # improve xticks and labels      
+    ticks, xlabels, binsize = improve_yticks(top.iloc[0])
+    plt.xticks(ticks, xlabels, fontsize=8)
+
+#   calculate and print % on the top of each bar
+    ticks = ax.get_yticks()
+    new_labels = []
+    locs, labels = plt.yticks()
+    for loc, label in zip(locs, labels):
+        count = top.iloc[loc]
+        perc = '{:0.1f}%'.format((count / top.sum()) * 100)
+        text = top.index[loc]
+        new_labels.append(text)
+        plt.text(count + (0.3 * binsize), loc, perc, ha='center', va='center', 
+                 color='black', fontsize=7, weight='ultralight')
+    plt.yticks(ticks, new_labels, fontsize=8, weight='ultralight')
+
     plt.tight_layout()
     plt.show()    
