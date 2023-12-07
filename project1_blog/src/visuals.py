@@ -285,159 +285,159 @@ def flights_by_cat(df, col, title='Origin airports with most delayed flights', t
     plt.show()
 
 
-def plot_categories(df, annotate=True, 
-                    title='month', 
-                    rotate=False, 
-                    topn=20, 
-                    figsize=(12, 6), 
-                    orient='v',
-                    base_color=BASE_COLOR, 
-                    base_grey=BASE_GREY):
+# def plot_categories(df, annotate=True, 
+#                     title='month', 
+#                     rotate=False, 
+#                     topn=20, 
+#                     figsize=(12, 6), 
+#                     orient='v',
+#                     base_color=BASE_COLOR, 
+#                     base_grey=BASE_GREY):
     
-    ontime_total = df['on_time'].sum()
-    delay_total = df['delayed'].sum()
-    grand_total = ontime_total + delay_total
+#     ontime_total = df['on_time'].sum()
+#     delay_total = df['delayed'].sum()
+#     grand_total = ontime_total + delay_total
 
-    # avoid do print categories with low amount of flights
-    df = df.loc[df['delayed'] >= 10000]
+#     # avoid do print categories with low amount of flights
+#     df = df.loc[df['delayed'] >= 10000]
 
-    df = df[:topn]
+#     df = df[:topn]
 
-    plt.figure(figsize=figsize)
-    weight = 'ultralight'
-    color = 'black'
-    xytext = (0, 3)
-    size = 8
+#     plt.figure(figsize=figsize)
+#     weight = 'ultralight'
+#     color = 'black'
+#     xytext = (0, 3)
+#     size = 8
 
-    # Customize annotation
-    if rotate:
-        rotation = 90
-        xytext = (0, 2)
-    else:
-        rotation = None
-        xytext = (0, 3)
+#     # Customize annotation
+#     if rotate:
+#         rotation = 90
+#         xytext = (0, 2)
+#     else:
+#         rotation = None
+#         xytext = (0, 3)
 
-    if orient == 'v':
-        ax1 = sns.barplot(data=df, y=df.index, x='on_time', color=base_grey,
-                          label='On-time flights (% on-time / all flights)', errorbar=None, errwidth=1)
-        ax2 = sns.barplot(data=df, y=df.index, x='delayed', color=base_color,
-                          label='Delayed flights (% delay / on-time)', errorbar=None, errwidth=1, width=0.6,
-                          edgecolor=base_color)
-        ticks = ax1.get_yticks()
-        locs, labels = plt.yticks()
-    else:
-        ax1 = sns.barplot(data=df, x=df.index, y='on_time', color=base_grey,
-                          label='On-time flights (% on-time / all flights)', errorbar=None, errwidth=1)
-        ax2 = sns.barplot(data=df, x=df.index, y='delayed', color=base_color,
-                          label='Delayed flights (% delay / on-time)', errorbar=None, errwidth=1, width=0.6,
-                          edgecolor=base_color)
-        ticks = ax1.get_xticks()
-        locs, labels = plt.xticks()
+#     if orient == 'v':
+#         ax1 = sns.barplot(data=df, y=df.index, x='on_time', color=base_grey,
+#                           label='On-time flights (% on-time / all flights)', errorbar=None, errwidth=1)
+#         ax2 = sns.barplot(data=df, y=df.index, x='delayed', color=base_color,
+#                           label='Delayed flights (% delay / on-time)', errorbar=None, errwidth=1, width=0.6,
+#                           edgecolor=base_color)
+#         ticks = ax1.get_yticks()
+#         locs, labels = plt.yticks()
+#     else:
+#         ax1 = sns.barplot(data=df, x=df.index, y='on_time', color=base_grey,
+#                           label='On-time flights (% on-time / all flights)', errorbar=None, errwidth=1)
+#         ax2 = sns.barplot(data=df, x=df.index, y='delayed', color=base_color,
+#                           label='Delayed flights (% delay / on-time)', errorbar=None, errwidth=1, width=0.6,
+#                           edgecolor=base_color)
+#         ticks = ax1.get_xticks()
+#         locs, labels = plt.xticks()
 
-    #   improve yticks
-    maxvalue = df['on_time'].max()
-    yticks, ylabels, binsize = improve_yticks(maxvalue)
+#     #   improve yticks
+#     maxvalue = df['on_time'].max()
+#     yticks, ylabels, binsize = improve_yticks(maxvalue)
 
-    #   print only the first 20 characters of the categorical variable description
-    new_labels = []
-    for loc, label in zip(locs, labels):
-        text = df.index[loc][:30]
-        new_labels.append(text)
+#     #   print only the first 20 characters of the categorical variable description
+#     new_labels = []
+#     for loc, label in zip(locs, labels):
+#         text = df.index[loc][:30]
+#         new_labels.append(text)
 
-    if orient == 'v':
-        plt.yticks(ticks, new_labels, fontsize=8, weight='ultralight')
-        plt.ylabel(title)
-        plt.xlabel('Number of flights')
-        plt.xticks(yticks, ylabels)
-    else:
-        plt.xticks(ticks, new_labels, rotation=90, fontsize=8, weight='ultralight')
-        plt.ylabel(title)
-        plt.xlabel('Number of flights')
-        plt.yticks(yticks, ylabels)
+#     if orient == 'v':
+#         plt.yticks(ticks, new_labels, fontsize=8, weight='ultralight')
+#         plt.ylabel(title)
+#         plt.xlabel('Number of flights')
+#         plt.xticks(yticks, ylabels)
+#     else:
+#         plt.xticks(ticks, new_labels, rotation=90, fontsize=8, weight='ultralight')
+#         plt.ylabel(title)
+#         plt.xlabel('Number of flights')
+#         plt.yticks(yticks, ylabels)
 
-    # annote bars with % proportion, doing this way gives flexibility we an print proportion of one bar another
-    grand = []
+#     # annote bars with % proportion, doing this way gives flexibility we an print proportion of one bar another
+#     grand = []
 
-    # print text outside the bar, determine gap between bar and text dynamically based on binsize
-    if binsize >= 500000:
-        gap = 0.5 * binsize
-    if binsize >= 200000:
-        gap = 0.15 * binsize
-    else:
-        gap = 0.15 * binsize
+#     # print text outside the bar, determine gap between bar and text dynamically based on binsize
+#     if binsize >= 500000:
+#         gap = 0.5 * binsize
+#     if binsize >= 200000:
+#         gap = 0.15 * binsize
+#     else:
+#         gap = 0.15 * binsize
 
-    for i, p in enumerate(ax2.patches):
-        prop = None
-        # there are 2 bars for each feature. those with index 0-19 are the onetime bards, and 20-39 are the delay bars   
-        if i >= len(df):
-            # this is for smaller delay bars
-            index = i - len(df)
+#     for i, p in enumerate(ax2.patches):
+#         prop = None
+#         # there are 2 bars for each feature. those with index 0-19 are the onetime bards, and 20-39 are the delay bars   
+#         if i >= len(df):
+#             # this is for smaller delay bars
+#             index = i - len(df)
 
-            # print text inside the bar
-            gap = -abs(gap)
+#             # print text inside the bar
+#             gap = -abs(gap)
 
-            color = 'white'
-            weight = 'bold'
-            size = 6
+#             color = 'white'
+#             weight = 'bold'
+#             size = 6
 
-            if orient == 'v':
-                xytext = (0, 6)
-                val = p.get_width() / grand_total
-            else:
-                xytext = (0, -8)
-                val = p.get_height() / grand_total
+#             if orient == 'v':
+#                 xytext = (0, 6)
+#                 val = p.get_width() / grand_total
+#             else:
+#                 xytext = (0, -8)
+#                 val = p.get_height() / grand_total
 
-            # calculate proportion of delay / on_time
-            val = val / grand[index]
-        else:
-            # logic for the biggest bar, in this case ontime
-            index = i
+#             # calculate proportion of delay / on_time
+#             val = val / grand[index]
+#         else:
+#             # logic for the biggest bar, in this case ontime
+#             index = i
 
-            gap = abs(gap)
-            color = 'black'
-            weight = 'ultralight'
-            size = 6
+#             gap = abs(gap)
+#             color = 'black'
+#             weight = 'ultralight'
+#             size = 6
 
-            if orient == 'v':
-                val = p.get_width() / grand_total
-                #                 space = len(str(val))+3
-                xytext = (0, 6)
-            elif rotate:
-                xytext = (0, 8)
-                val = p.get_height() / grand_total
-            else:
-                xytext = (0, 3)
-                val = p.get_height() / grand_total
+#             if orient == 'v':
+#                 val = p.get_width() / grand_total
+#                 #                 space = len(str(val))+3
+#                 xytext = (0, 6)
+#             elif rotate:
+#                 xytext = (0, 8)
+#                 val = p.get_height() / grand_total
+#             else:
+#                 xytext = (0, 3)
+#                 val = p.get_height() / grand_total
 
-            # save proportion of on_time bar to reuse for proportion calculations in delay bars
-            grand.append(val)
+#             # save proportion of on_time bar to reuse for proportion calculations in delay bars
+#             grand.append(val)
 
-        if orient == 'v':
-            ax2.annotate("{:.2%}".format(val),
-                         (p.get_x() + p.get_width() + gap, p.get_y() + 0.6),
-                         ha='center', va='center',
-                         xytext=xytext,
-                         textcoords='offset points',
-                         size=size,
-                         weight=weight,
-                         rotation=rotation,
-                         color=color)
+#         if orient == 'v':
+#             ax2.annotate("{:.2%}".format(val),
+#                          (p.get_x() + p.get_width() + gap, p.get_y() + 0.6),
+#                          ha='center', va='center',
+#                          xytext=xytext,
+#                          textcoords='offset points',
+#                          size=size,
+#                          weight=weight,
+#                          rotation=rotation,
+#                          color=color)
 
-        else:
-            ax2.annotate("{:.2%}".format(val),
-                         (p.get_x() + p.get_width() / 2., p.get_height()),
-                         ha='center', va='center',
-                         xytext=xytext,
-                         textcoords='offset points',
-                         size=size,
-                         weight=weight,
-                         rotation=rotation,
-                         color=color)
+#         else:
+#             ax2.annotate("{:.2%}".format(val),
+#                          (p.get_x() + p.get_width() / 2., p.get_height()),
+#                          ha='center', va='center',
+#                          xytext=xytext,
+#                          textcoords='offset points',
+#                          size=size,
+#                          weight=weight,
+#                          rotation=rotation,
+#                          color=color)
 
-    plt.title('DELAYED vs ON-TIME flights by {}'.format(title))
-    plt.legend(bbox_to_anchor=(1, 1), loc='upper left', title='Flight Status')
-    plt.tight_layout()
-    plt.show()
+#     plt.title('DELAYED vs ON-TIME flights by {}'.format(title))
+#     plt.legend(bbox_to_anchor=(1, 1), loc='upper left', title='Flight Status')
+#     plt.tight_layout()
+#     plt.show()
 
 
 def cat_heatmap(df, 
@@ -605,7 +605,7 @@ def plot_categories(df,
         label = [x for x in bars.datavalues]
         labels.append(label) 
     
-    label_colors = ['darkorange', 'black']
+    label_colors = ['red', 'black']
     for i, bars in enumerate(ax1.containers): 
         labels = [f"{x:.0%}" for x in bars.datavalues]
 #         label_colors = ['black' if i ==0 else 'white' for label in labels]
@@ -628,7 +628,9 @@ def hist_by_cat(df,
     """ Categorical seaborn count plot - first 3 highest bars are highlighted """
 
     # set figsize
-    if df[col].nunique() < 5:
+    if df[col].nunique() <= 2:
+        figsize=(6,2)
+    elif df[col].nunique() <= 6:
         figsize=(6,3)
     else: 
         figsize=(12,8)    

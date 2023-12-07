@@ -1,11 +1,11 @@
-git a## Udacity Data Science Nanodegree
+## Udacity Data Science Nanodegree
 
 ---
 ## Project 1: Writing a data scientist blog post 
 The purpose of this project is to demonstrate the ability to effectively communicate technical results.
 
 #### Created by: Juanita Smith
-#### Last date: November 2023
+#### Last date: December 2023
 
 ---
  Airbnb - Secrets to find the best places to stay in London
@@ -43,9 +43,9 @@ Overview of the main steps of this project, following the CRISP-DM process:
 To clone the repository: https://github.com/JuanitaSmith/datascience_nanodegree.git
 
 - Environment was build using Anaconda.
-- Python 3 (Python 3.10 interpreter was used).
+- Python 3.10 interpreter was used.
 - Refer to `requirements.txt` for libraries and versions needed to build your environment.
-
+- refer to `environment.yaml` for environment setup used
 
 ## 3. Project Motivation<a name="motivation"></a>
 
@@ -90,7 +90,7 @@ The following datasets were downloaded:
 
 - **listings**: full descriptions of each rental property with average review score and daily price
 - **calendar**: each listing have a record for each calendar day for the next 365 days ahead, showing the price and availability on that specific day
-- neighbourhoods.geojson: Used to visualize spatial data in notebook 5
+- **neighbourhoods.geojson**: Used to visualize spatial data in notebook 4 and 5
 
 Metadata are available [here](https://docs.google.com/spreadsheets/d/1iWCNJcSutYqpULSQHlNyGInUvHg2BoUGoNRIGa6Szc4/edit#gid=1322284596)
 
