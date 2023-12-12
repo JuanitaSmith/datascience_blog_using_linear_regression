@@ -10,6 +10,7 @@ def hex_to_rgb(hex_value):
     h = hex_value.lstrip('#')
     return tuple(int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4))
 
+
 def set_plot_defaults():
     """Set defaults formatting for consistency across all plots """
 
@@ -18,13 +19,13 @@ def set_plot_defaults():
 
     # my custom color palette - I call is ocean spray
     hex_colors = [
-      '7C9E9E', # base
-      'E2E9E9', # light gray    
+      '7C9E9E',  # base
+      'E2E9E9',  # light gray
       '578686',  # group 1
-      '667595',  # group 2     
-      'FFEDC8', # highlight  
-      '366F6F', # highlight intense     
-      'DFC591', # base_complementary   
+      '667595',  # group 2
+      'FFEDC8',  # highlight
+      '366F6F',  # highlight intense
+      'DFC591',  # base_complementary
     ]  
     
     rgb_colors = list(map(hex_to_rgb, hex_colors))
@@ -53,11 +54,12 @@ def set_plot_defaults():
     plt.rc('legend', fontsize=small_size)  # legend fontsize
     plt.rc('figure', titlesize=bigger_size, titleweight="bold", figsize=[8, 4])  # fontsize of the figure title
 
-    return base_color, base_highlight_intense, base_highlight, base_complimentary, base_grey, base_color_group1, base_color_group2, symbols
+    return (base_color, base_highlight_intense, base_highlight, base_complimentary, base_grey,
+            base_color_group1, base_color_group2, symbols)
 
 
 # set default plot formatting
-BASE_COLOR, BASE_HIGHLIGHT_INTENSE, BASE_HIGHLIGHT, BASE_COMPLIMENTARY, BASE_GREY, BASE_COLOR_ARR, BASE_COLOR_DEP, SYMBOLS = set_plot_defaults()
+(BASE_COLOR, BASE_HIGHLIGHT_INTENSE, BASE_HIGHLIGHT, BASE_COMPLIMENTARY, BASE_GREY, BASE_COLOR_ARR, BASE_COLOR_DEP, SYMBOLS) = set_plot_defaults()
 
 
 def improve_yticks(maxvalue, 
@@ -285,161 +287,6 @@ def flights_by_cat(df, col, title='Origin airports with most delayed flights', t
     plt.show()
 
 
-# def plot_categories(df, annotate=True, 
-#                     title='month', 
-#                     rotate=False, 
-#                     topn=20, 
-#                     figsize=(12, 6), 
-#                     orient='v',
-#                     base_color=BASE_COLOR, 
-#                     base_grey=BASE_GREY):
-    
-#     ontime_total = df['on_time'].sum()
-#     delay_total = df['delayed'].sum()
-#     grand_total = ontime_total + delay_total
-
-#     # avoid do print categories with low amount of flights
-#     df = df.loc[df['delayed'] >= 10000]
-
-#     df = df[:topn]
-
-#     plt.figure(figsize=figsize)
-#     weight = 'ultralight'
-#     color = 'black'
-#     xytext = (0, 3)
-#     size = 8
-
-#     # Customize annotation
-#     if rotate:
-#         rotation = 90
-#         xytext = (0, 2)
-#     else:
-#         rotation = None
-#         xytext = (0, 3)
-
-#     if orient == 'v':
-#         ax1 = sns.barplot(data=df, y=df.index, x='on_time', color=base_grey,
-#                           label='On-time flights (% on-time / all flights)', errorbar=None, errwidth=1)
-#         ax2 = sns.barplot(data=df, y=df.index, x='delayed', color=base_color,
-#                           label='Delayed flights (% delay / on-time)', errorbar=None, errwidth=1, width=0.6,
-#                           edgecolor=base_color)
-#         ticks = ax1.get_yticks()
-#         locs, labels = plt.yticks()
-#     else:
-#         ax1 = sns.barplot(data=df, x=df.index, y='on_time', color=base_grey,
-#                           label='On-time flights (% on-time / all flights)', errorbar=None, errwidth=1)
-#         ax2 = sns.barplot(data=df, x=df.index, y='delayed', color=base_color,
-#                           label='Delayed flights (% delay / on-time)', errorbar=None, errwidth=1, width=0.6,
-#                           edgecolor=base_color)
-#         ticks = ax1.get_xticks()
-#         locs, labels = plt.xticks()
-
-#     #   improve yticks
-#     maxvalue = df['on_time'].max()
-#     yticks, ylabels, binsize = improve_yticks(maxvalue)
-
-#     #   print only the first 20 characters of the categorical variable description
-#     new_labels = []
-#     for loc, label in zip(locs, labels):
-#         text = df.index[loc][:30]
-#         new_labels.append(text)
-
-#     if orient == 'v':
-#         plt.yticks(ticks, new_labels, fontsize=8, weight='ultralight')
-#         plt.ylabel(title)
-#         plt.xlabel('Number of flights')
-#         plt.xticks(yticks, ylabels)
-#     else:
-#         plt.xticks(ticks, new_labels, rotation=90, fontsize=8, weight='ultralight')
-#         plt.ylabel(title)
-#         plt.xlabel('Number of flights')
-#         plt.yticks(yticks, ylabels)
-
-#     # annote bars with % proportion, doing this way gives flexibility we an print proportion of one bar another
-#     grand = []
-
-#     # print text outside the bar, determine gap between bar and text dynamically based on binsize
-#     if binsize >= 500000:
-#         gap = 0.5 * binsize
-#     if binsize >= 200000:
-#         gap = 0.15 * binsize
-#     else:
-#         gap = 0.15 * binsize
-
-#     for i, p in enumerate(ax2.patches):
-#         prop = None
-#         # there are 2 bars for each feature. those with index 0-19 are the onetime bards, and 20-39 are the delay bars   
-#         if i >= len(df):
-#             # this is for smaller delay bars
-#             index = i - len(df)
-
-#             # print text inside the bar
-#             gap = -abs(gap)
-
-#             color = 'white'
-#             weight = 'bold'
-#             size = 6
-
-#             if orient == 'v':
-#                 xytext = (0, 6)
-#                 val = p.get_width() / grand_total
-#             else:
-#                 xytext = (0, -8)
-#                 val = p.get_height() / grand_total
-
-#             # calculate proportion of delay / on_time
-#             val = val / grand[index]
-#         else:
-#             # logic for the biggest bar, in this case ontime
-#             index = i
-
-#             gap = abs(gap)
-#             color = 'black'
-#             weight = 'ultralight'
-#             size = 6
-
-#             if orient == 'v':
-#                 val = p.get_width() / grand_total
-#                 #                 space = len(str(val))+3
-#                 xytext = (0, 6)
-#             elif rotate:
-#                 xytext = (0, 8)
-#                 val = p.get_height() / grand_total
-#             else:
-#                 xytext = (0, 3)
-#                 val = p.get_height() / grand_total
-
-#             # save proportion of on_time bar to reuse for proportion calculations in delay bars
-#             grand.append(val)
-
-#         if orient == 'v':
-#             ax2.annotate("{:.2%}".format(val),
-#                          (p.get_x() + p.get_width() + gap, p.get_y() + 0.6),
-#                          ha='center', va='center',
-#                          xytext=xytext,
-#                          textcoords='offset points',
-#                          size=size,
-#                          weight=weight,
-#                          rotation=rotation,
-#                          color=color)
-
-#         else:
-#             ax2.annotate("{:.2%}".format(val),
-#                          (p.get_x() + p.get_width() / 2., p.get_height()),
-#                          ha='center', va='center',
-#                          xytext=xytext,
-#                          textcoords='offset points',
-#                          size=size,
-#                          weight=weight,
-#                          rotation=rotation,
-#                          color=color)
-
-#     plt.title('DELAYED vs ON-TIME flights by {}'.format(title))
-#     plt.legend(bbox_to_anchor=(1, 1), loc='upper left', title='Flight Status')
-#     plt.tight_layout()
-#     plt.show()
-
-
 def cat_heatmap(df, 
                 reason, 
                 center=0):  
@@ -453,7 +300,8 @@ def cat_heatmap(df,
     plt.title('{}'.format(reason.upper()))
     plt.xlabel('Origin Airport')
     plt.ylabel('Carrier')
-    
+
+
 def compare_features(df, 
                      cols_of_interest, 
                      conda, 
@@ -471,12 +319,10 @@ def compare_features(df,
     groupb = df.query(condb)
 
     groupa = groupa[cols_of_interest].describe().T['mean'].to_frame()
-#     groupa = groupa[cols_of_interest].astype(int).describe().T['mean'].to_frame()    
     groupa['category'] = cata_description
 
 
     groupb = groupb[cols_of_interest].describe().T['mean'].to_frame()
-#     groupb = groupb[cols_of_interest].astype(int).describe().T['mean'].to_frame()
     groupb['category'] = catb_description
 
     df = pd.concat([groupa, groupb], axis=0)
@@ -506,7 +352,8 @@ def compare_features(df,
 
     plt.title('Comparison of features: {}'.format(title_extension))
     plt.show()   
-    
+
+
 def annotate_grouped_barplot(df_a, 
                              df_b, 
                              hue='is_business', 
@@ -514,8 +361,13 @@ def annotate_grouped_barplot(df_a,
                              y='percentage', 
                              topn=10, 
                              figsize=(6,10), 
-                             title='Business and Individual Hosts: Price Comparision',
-                             legend_title='Is Business?'):
+                             title='Business and Individual Hosts: Price Comparison',
+                             legend_title='Is Business?',
+                             show_gridlines=True):
+    """
+    Categorical seaborn bar plot - plot proportions by category
+    comparing business vs individual listings
+    """
 
     plt.figure(figsize=figsize)
     
@@ -538,7 +390,6 @@ def annotate_grouped_barplot(df_a,
     topb = topb.merge(meanb, how='inner', left_index=True, right_index=True)
        
     top = pd.concat([topa, topb]).reset_index()
-#     top.columns = [x, 'percentage', 'is_business', 'price_mean']
     top.columns = [x, 'percentage', hue, 'price_mean']    
     
     cat = list(top[hue].unique())
@@ -552,8 +403,7 @@ def annotate_grouped_barplot(df_a,
         # use the column and bar height to get the correct value for price_mean
         labels2=[f'{x*100:,.1f}%' for x in c.datavalues]
 
-        
-        labels1 = [f"(Avg: £{top.loc[(top[hue].eq(col) & top.percentage.eq(h)), 'price_mean'].iloc[0]} pn)" if (h := v.get_width()) > 0 else '' for v in c ]        
+        labels1 = [f"(Avg: £{top.loc[(top[hue].eq(col) & top.percentage.eq(h)), 'price_mean'].iloc[0]} pn)" if (h := v.get_width()) > 0 else '' for v in c]
 
         # add the name annotation to the top of the bar
         ax.bar_label(c, labels=labels2, padding=2, label_type='edge', color='black', weight='ultralight', fontsize=8)  
@@ -564,6 +414,7 @@ def annotate_grouped_barplot(df_a,
     # leave space at end of plot for extra text
     ax.margins(x=0.4)    
     binsize = 0.1
+    ax.grid(show_gridlines)
     xticks = np.arange(0, 1 + binsize, binsize)
     xlabels = ['{:1.0f}%'.format(tick*100) for tick in xticks]       
     plt.xticks(xticks, xlabels)    
@@ -573,6 +424,7 @@ def annotate_grouped_barplot(df_a,
     plt.title(title)
 
     plt.show()
+
     
 def plot_categories(df, 
                     annotate=True, 
@@ -581,6 +433,10 @@ def plot_categories(df,
                     figsize=(18, 10),
                     base_color=BASE_COLOR, 
                     base_grey=BASE_GREY):
+    """
+    Categorical seaborn bar plot - plt differences in features
+    of business vs individual listings
+    """
     
     business_total = df['business'].sum()
     individual_total = df['individual'].sum()
@@ -617,7 +473,8 @@ def plot_categories(df,
     plt.legend(bbox_to_anchor=(1, 1), loc='upper left')
     plt.tight_layout()
     plt.show()  
-    
+
+
 def hist_by_cat(df, 
                 col, 
                 title='Distribution for', 

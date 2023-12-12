@@ -21,8 +21,9 @@ The purpose of this project is to demonstrate the ability to effectively communi
 ### Airbnb - Secrets to find the best places to stay in London
 
 This project is using Linear Regression algorithms after extensive data wrangling to predict the average daily listing price in pounds.
-Which factors influence price the most? 
 
-A high R2 score of 0.95 was obtained, with a mean absolute error of around £10
+A high R2 score of 0.95 was obtained, with a median absolute error of around £10
 
-<img src="project1_blog/images/summary.png" alt="drawing" width="7850"/>
+The main findings of the code can be found at the blog post available [here](https://medium.com/@juasmithy/secrets-to-find-the-best-places-to-stay-in-london-with-airbnb-1641c1b49e9b).
+
+<img src="project1_data_science_blog/images/summary.png" alt="drawing" width="850"/>

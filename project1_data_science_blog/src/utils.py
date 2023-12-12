@@ -4,7 +4,7 @@ import os
 # Entity recognition: is the host a person or business ?
 import stanza
 from sklearn.experimental import enable_iterative_imputer
-from sklearn.impute import KNNImputer, IterativeImputer, SimpleImputer
+from sklearn.impute import IterativeImputer
 import time
 
 
@@ -20,7 +20,6 @@ def reduce_mem_usage(df):
     for col in df.columns:
         col_type = df[col].dtype
         if col_type != object and col_type != 'boolean' and col_type != 'bool':
-#         if col_type != object:            
             c_min = df[col].min()
             c_max = df[col].max()
             if str(col_type)[:3] == 'int':
@@ -64,7 +63,8 @@ def change_width(ax, new_value):
 
         # we recenter the bar
         patch.set_x(patch.get_x() + diff * .5)
-        
+
+
 def fit_imputer(df, tolerance=0.2, verbose=2, max_iter=20, nearest_features=20, imputation_order='ascending',
                 initial_strategy='most_frequent'):
     """
@@ -109,27 +109,31 @@ def fit_imputer(df, tolerance=0.2, verbose=2, max_iter=20, nearest_features=20, 
 
     return imputer_df   
 
-# Use entity recognisiton from natural language tools to automatically classify a person or business
+# Use entity recognition from natural language tools to automatically classify a person or business
+
 
 def entity_recognision(name, nlp):
     """ detect if name is a person's name or an organization """
 
-    # key words to classify as a business to help the algorithm a little
-    business_key_words = ['hotel', 'hotels', 'hostel', 'hostels', 'executive', 'service', 'travelnest', 'co', 'family', 'the',                             'underthedoormat', 'destination8', 'guest', 'international', 'londonflats', 'property', 'homes',                                 'SynthAccommodation', 'accommodation', 'apartments']
+    # keywords to classify as a business to help the algorithm a little
+    business_key_words = ['hotel', 'hotels', 'hostel', 'hostels', 'executive', 'service', 'travelnest', 'co', 'family',
+                          'the', 'underthedoormat', 'destination8', 'guest', 'international', 'londonflats', 'property',
+                          'homes', 'SynthAccommodation', 'accommodation', 'apartments']
 
-    # key words to classify as a person. Sometimes algorithm cannot determine it's a person when & or and are inside e.g. 'Doreen & Nichola'
+    # keywords to classify as a person.
+    # Sometimes algorithm cannot determine it's a person when & or and are inside e.g. 'Doreen & Nichola'
     individual_key_words = ['&', 'and']
 
     doc = nlp(name)
     ent = [ent.type for sent in doc.sentences for ent in sent.ents]
 
     # sometimes different words of a host name are classified more than once, e.g. ['PERSON', 'ORG']
-    if ('ORG' in ent) or ('GPE' in ent)  or ('FAC' in ent) or ('CARDINAL' in ent):
+    if ('ORG' in ent) or ('GPE' in ent) or ('FAC' in ent) or ('CARDINAL' in ent):
         ent = 'ORG'
     else:
         ent = 'PERSON'
 
-    # lets help a little bit the model it's not always perfect
+    # let's help a little bit the model it's not always perfect
     for n in name.split(' '):
         if n.lower() in business_key_words:
             ent = 'ORG'   
