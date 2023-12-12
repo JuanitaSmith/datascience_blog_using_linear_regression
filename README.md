@@ -12,7 +12,7 @@ This repository contains projects completed during during my Udacity Data Scienc
 Summary of completed projects
 ---
 
-<span style="color:blue; font-size:30px; line-height:20px; font-family: Calibri;">Project 1: Writing a data scientist blog post </span>
+# Project 1: Writing a data scientist blog post
 
 
 The purpose of this project is to demonstrate the ability to effectively communicate technical results to a non-technical audience.
