@@ -1,11 +1,13 @@
-import numpy as np
 import os
+import time
 
-# Entity recognition: is the host a person or business ?
-import stanza
+import numpy as np
+import pandas as pd
+import scipy as sp
+from sklearn.feature_selection import mutual_info_regression
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
-import time
+from sklearn.model_selection import train_test_split
 
 
 def reduce_mem_usage(df):
@@ -107,7 +109,8 @@ def fit_imputer(df, tolerance=0.2, verbose=2, max_iter=20, nearest_features=20, 
     end = time.time()
     print('Execution time for IterativeImputer: {} sec'.format(end - start))
 
-    return imputer_df   
+    return imputer_df
+
 
 # Use entity recognition from natural language tools to automatically classify a person or business
 
@@ -136,10 +139,128 @@ def entity_recognision(name, nlp):
     # let's help a little bit the model it's not always perfect
     for n in name.split(' '):
         if n.lower() in business_key_words:
-            ent = 'ORG'   
+            ent = 'ORG'
             break
         elif n.lower() in individual_key_words:
             ent = 'PERSON'
             break
 
     return ent
+
+
+def log_transform(x):
+    """ Convert variable to log10 scale. """
+
+    return np.log10(x)
+
+
+def inverse_log_transform(x):
+    """ Convert variable back from log10 to original scale. """
+
+    return sp.special.exp10(x)
+
+
+def get_mi_score(X, y):
+    """
+    Calculate mutual information to show feature importance.
+
+    Estimated mutual information between each feature and the target
+
+    Args:
+        X (array-like or sparse matrix) - Independent features
+        y (array-like) - Dependent feature to be predicted
+    Returns:
+        mi (ndarray) - estimated mutual information
+    """
+
+    mi = mutual_info_regression(X, y, random_state=10)
+    mi = pd.Series(mi, index=X.columns).sort_values(ascending=False)
+    return mi
+
+
+def calculate_residuals(model, X, y):
+    """
+    Calculate residuals (actual - predicted)
+
+    Calculate predictions using fitted model object and independent variables.
+    Use predictions to calculate residuals.
+
+    Args:
+        X (array-like or sparse matrix) - independent features
+        y (array-like) - dependent feature (true / actual values)
+        model - scikit-learn fitted model
+    Returns
+        df_results (pandas dataframe) -  with columns 'Residuals',
+                                        'Actual', 'Predicted'
+    """
+
+    predictions = model.predict(X)
+    df_results = pd.DataFrame({'Actual': y, 'Predicted': predictions})
+    df_results['Residuals'] = \
+        abs(df_results['Actual']) - abs(df_results['Predicted'])
+
+    return df_results
+
+
+# build a final cleaning function
+def cleaning(df, cluster_preprocessor, cluster_model, onehot_preprocessor, random_state=0):
+    """
+    Cleaning function to prepare listing dataset for modelling.
+
+    Args:
+        df (pandas dataframe) - listing dataset cleaned by notebooks 1 and 2
+        cluster_preprocesser - pre-fitted model for clustering preparation
+        cluster_model - pre-fitted model to create property_cluster variable
+        onehot_preprocessor - pre-fitted model for onehot encoding
+    """
+    # cluster preprocess for only relevant columns
+    df_filtered = df[['room_type',
+                      'property_type',
+                      'latitude',
+                      'longitude',
+                      'price_mean']].copy(deep=True)
+
+    df_transformed = cluster_preprocessor.transform(df_filtered)
+
+    # cluster data with already fitted model
+    df_transformed['cluster'] = cluster_model.predict(df_transformed)
+
+    # rank and renaming clusters to be in sequential order
+    tmp = df_transformed.groupby('cluster').agg(
+        min=('price_mean', 'min'),
+        max=('price_mean', 'max'),
+        nr_listings=('cluster', 'count')).sort_values(by='min')
+
+    tmp['rank'] = tmp['min'].rank(method='max').astype('int')
+
+    # resequence the cluster names by price
+    mymap = pd.Series(tmp['rank'].values, index=tmp.index).to_dict()
+
+    # rename clusters to sequence them into ranked order
+    df_transformed['property_cluster'] = df_transformed['cluster'].map(mymap)
+
+    # add cluster to main dataset
+    df['property_cluster'] = df_transformed['property_cluster']
+
+    # drop lat/long after clustering
+    df = df.drop(['latitude', 'longitude'], axis=1)
+
+    # split the dataset into dependent and independent datasets
+    y = df['price_mean'].copy()
+    X = df.drop('price_mean', axis=1)
+
+    # final onehot encoding for all features dropping sparse columns
+    X_transformed = onehot_preprocessor.transform(X)
+
+    # make sure property types are well presented
+    # in both training and testing sets using stratify
+    X_train, X_test, y_train, y_test = train_test_split(
+        X_transformed,
+        y,
+        test_size=0.25,
+        random_state=random_state,
+        stratify=X_transformed[['property_cluster',
+                                'is_business_True']],
+    )
+
+    return X_train, X_test, y_train, y_test

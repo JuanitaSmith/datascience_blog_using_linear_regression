@@ -22,3 +22,6 @@ IPython==8.15.0
 scipy==1.11.3
 patsy==0.5.3
 pyproj==3.6.1
+pycodestyle_magic==0.5
+pycodestyle==2.10.0
+flake8==6.0.0

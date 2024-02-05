@@ -47,7 +47,10 @@ To clone the repository: https://github.com/JuanitaSmith/datascience_nanodegree.
 - Environment was build using Anaconda.
 - Python 3.10 interpreter was used.
 - Refer to `requirements.txt` for libraries and versions needed to build your environment.
-- refer to `environment.yaml` for environment setup used
+
+- Use command `conda install -r requirements.txt` or `pip install -r requirements.txt` to rebuild the environment automatically.
+
+- refer to `environment.yaml` for environment setup
 
 ## 3. Project Motivation<a name="motivation"></a>
 
