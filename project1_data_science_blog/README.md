@@ -36,8 +36,8 @@ Overview of the main steps of this project, following the CRISP-DM process:
 3. Perform necessary cleaning, analysis, and modeling.
 4. Analyze, Model, and Visualize
 5. Communicate business insights
-  - Create a GitHub repository to share your code and data wrangling/modeling techniques, with a technical audience in mind
-  - Create a blog post to share questions and insights with a non-technical audience
+   - Create a GitHub repository to share code and data wrangling/modeling techniques, with a technical audience in mind.
+   - Create a blog post to share questions and insights with a non-technical audience.
 
 
 ## 2. Installation <a name="installation"></a>
@@ -63,17 +63,17 @@ Before we jump into modelling, I first wanted to understand the main drivers tha
 This project will focus on answering business questions below.  
 
 <span style="color:blue; font-size:20px; line-height:20px; font-family: Calibri;">1) Are some hosts running a business, and if so, what is the impact on price ?</span>
->- Should we distinguish between short-term and long-term rentals, and how does it effect the daily average price ?
->- Are some hosts running a business with multiple listings ? If so, how does this affect the price ?
+  - Should we distinguish between short-term and long-term rentals, and how does it effect the daily average price ?
+  - Are some hosts running a business with multiple listings ? If so, how does this affect the price ?
 
 <span style="color:blue; font-size:20px; line-height:20px; font-family: Calibri;">2) Host Analysis: How does **host excellence** influence price ?</span>
->- Super hosts seems to describe their properties better, how does this effect price and availability ?
+  - Super hosts seems to describe their properties better, how does this effect price and availability ?
 
 <span style="color:blue; font-size:20px; line-height:20px; font-family: Calibri;">3) What effect does **star ratings** have on rental price ?</span>
->- Would a 5-star vs 3-star listing in the same location cost more ?
+  - Would a 5-star vs 3-star listing in the same location cost more ?
 
 <span style="color:blue; font-size:20px; line-height:20px; font-family: Calibri;">4) Predict average daily listing price</span>
->- Knowing the impact of business listings, host excellence and star ratings above, could we make an accurate average daily price prediction ?
+  - Knowing the impact of business listings, host excellence and star ratings above, could we make an accurate average daily price prediction ?
 
 #### The project is divided into 4 main notebooks:
 
@@ -162,4 +162,3 @@ Mean absolute error was a little higher at £16 and R2 score was 0.956, still a 
 Must give credit to Airbnb for the data.  
 You can find the Licensing for the data and other descriptive information at the Inside Airbnb  [here](http://insideairbnb.com/get-the-data/).  
 This data is licensed under a Creative Commons Attribution 4.0 International License.
-
